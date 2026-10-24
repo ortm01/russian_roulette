@@ -30,7 +30,7 @@ async def cmd_start(message: Message):
         inline_keyboard=[
             [
                 InlineKeyboardButton(
-                    text="🎰 Играть",
+                    text="Играть",
                     web_app=WebAppInfo(url=WEBAPP_URL),
                 )
             ]
