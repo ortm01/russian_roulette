@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import os
+
 from aiogram import Bot, Dispatcher
 from aiogram.client.session.aiohttp import AiohttpSession
 from aiogram.filters import CommandStart
@@ -11,7 +12,11 @@ from aiogram.types import (
     WebAppInfo,
 )
 from dotenv import load_dotenv
+
+from database import close_db, get_or_create_user, init_db
+
 load_dotenv()
+
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 WEBAPP_URL = os.getenv("WEBAPP_URL")
 PROXY_URL = os.getenv("PROXY_URL")
@@ -26,18 +31,17 @@ dp = Dispatcher()
 
 @dp.message(CommandStart())
 async def cmd_start(message: Message):
+    user = await get_or_create_user(
+        message.from_user.id, message.from_user.username
+    )
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
-            [
-                InlineKeyboardButton(
-                    text="Играть",
-                    web_app=WebAppInfo(url=WEBAPP_URL),
-                )
-            ]
+            [InlineKeyboardButton(text="Играть", web_app=WebAppInfo(url=WEBAPP_URL))]
         ]
     )
     await message.answer(
-        "Добро пожаловать в Русскую рулетку! Нажми кнопку ниже, чтобы начать.",
+        f"Добро пожаловать в Русскую рулетку!\n"
+        f"Твой баланс: ${user['balance']:.2f}",
         reply_markup=keyboard,
     )
 
@@ -48,7 +52,11 @@ async def main():
     session = AiohttpSession(proxy=PROXY_URL) if PROXY_URL else None
     bot = Bot(token=BOT_TOKEN, session=session)
 
-    await dp.start_polling(bot)
+    await init_db()
+    try:
+        await dp.start_polling(bot)
+    finally:
+        await close_db()
 
 
 if __name__ == "__main__":
