@@ -1,1 +1,1 @@
-window.APP_CONFIG = { API_URL: "https://spas-playstation-semiconductor-tray.trycloudflare.com" };
+window.APP_CONFIG = { API_URL: "https://rider-communication-stay-courtesy.trycloudflare.com" };
