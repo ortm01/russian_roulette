@@ -29,3 +29,7 @@ async def get_or_create_user(telegram_id: int, username):
             telegram_id,
             username,
         )
+
+
+def get_pool():
+    return _pool
