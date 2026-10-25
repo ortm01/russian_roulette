@@ -1,1 +1,1 @@
-window.APP_CONFIG = { API_URL: "https://wait-approx-ira-paintball.trycloudflare.com" };
+window.APP_CONFIG = { API_URL: "https://pools-plus-areas-stars.trycloudflare.com" };
