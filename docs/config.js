@@ -1,1 +1,1 @@
-window.APP_CONFIG = { API_URL: "https://sends-chapter-maximize-dome.trycloudflare.com" };
+window.APP_CONFIG = { API_URL: "https://casino-sweet-onion-ecology.trycloudflare.com" };
