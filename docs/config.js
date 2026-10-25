@@ -1,1 +1,1 @@
-window.APP_CONFIG = { API_URL: "https://casino-sweet-onion-ecology.trycloudflare.com" };
+window.APP_CONFIG = { API_URL: "https://wait-approx-ira-paintball.trycloudflare.com" };
