@@ -1,1 +1,1 @@
-window.APP_CONFIG = { API_URL: "https://rider-communication-stay-courtesy.trycloudflare.com" };
+window.APP_CONFIG = { API_URL: "https://sends-chapter-maximize-dome.trycloudflare.com" };
