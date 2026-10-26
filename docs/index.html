@@ -2,53 +2,75 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#1a1a1a">
   <title>Русская рулетка</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <div class="balance">Баланс: <b id="balance">—</b></div>
-    <button id="bonusBtn" class="small">Бонус $10</button>
+  <header class="topbar">
+    <div class="balance" title="Ваш баланс">
+      <span class="balance-label">Баланс</span>
+      <span class="balance-value" id="balance">—</span>
+    </div>
+    <button id="bonusBtn" class="btn-pill" type="button">
+      Бонус <span class="pill-amount">+$10</span>
+    </button>
   </header>
 
-  <div id="message" class="message"></div>
+  <div id="message" class="message" role="status" aria-live="polite"></div>
 
-  <section id="setup" class="card hidden">
-    <h2>Новая игра</h2>
-    <label>Режим
-      <select id="mode">
-        <option value="1">1: без прокрутки (патроны лежат на местах)</option>
-        <option value="2">2: с прокруткой (каждый шаг как первый)</option>
-      </select>
-    </label>
-    <label>Патронов в барабане (из 6)
-      <select id="bullets">
-        <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
-      </select>
-    </label>
-    <label>Ставка, $
-      <div class="row">
-        <input id="bet" type="text" inputmode="decimal" value="1.00">
-        <button id="maxBtn" class="small" type="button">Всё</button>
+  <main>
+    <section id="setup" class="card hidden">
+      <h2>Новая игра</h2>
+
+      <label class="field">
+        <span class="field-label">Режим</span>
+        <select id="mode">
+          <option value="1">Без прокрутки — патроны на местах</option>
+          <option value="2">С прокруткой — каждый шаг как первый</option>
+        </select>
+      </label>
+
+      <label class="field">
+        <span class="field-label">Патронов в барабане <em>(из 6)</em></span>
+        <select id="bullets">
+          <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+        </select>
+      </label>
+
+      <label class="field">
+        <span class="field-label">Ставка, $</span>
+        <div class="row">
+          <input id="bet" type="text" inputmode="decimal" value="1.00" autocomplete="off">
+          <button id="maxBtn" class="btn-ghost" type="button">Всё</button>
+        </div>
+      </label>
+
+      <button id="startBtn" class="btn btn-danger btn-block" type="button">Начать игру</button>
+    </section>
+
+    <section id="play" class="card hidden">
+      <h2>Игра идёт</h2>
+      <p id="gameInfo" class="game-info"></p>
+
+      <div class="mult-block">
+        <div id="gameMult" class="mult-value">×1.00</div>
+        <div class="mult-caption">забрать сейчас</div>
       </div>
-    </label>
-    <button id="startBtn" class="primary">Начать</button>
-  </section>
 
-  <section id="play" class="card hidden">
-    <h2>Игра идёт</h2>
-    <p id="gameInfo"></p>
-    <p id="gameMult" class="big"></p>
-    <button id="stepBtn" class="primary">Выстрел</button>
-    <button id="cashBtn">Забрать выигрыш</button>
-  </section>
+      <div class="actions">
+        <button id="stepBtn" class="btn btn-danger btn-block" type="button">Выстрел</button>
+        <button id="cashBtn" class="btn btn-success btn-block" type="button">Забрать выигрыш</button>
+      </div>
+    </section>
 
-  <section class="card">
-    <h2>Рейтинг</h2>
-    <ol id="board"></ol>
-  </section>
+    <section class="card">
+      <h2>Рейтинг</h2>
+      <ol id="board" class="board"></ol>
+    </section>
+  </main>
 
   <script src="config.js"></script>
   <script src="app.js"></script>
