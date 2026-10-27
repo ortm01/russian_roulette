@@ -1,1 +1,1 @@
-window.APP_CONFIG = { API_URL: "https://photographers-hired-richards-searched.trycloudflare.com" };
+window.APP_CONFIG = { API_URL: "https://marion-absolute-emotions-grade.trycloudflare.com" };
