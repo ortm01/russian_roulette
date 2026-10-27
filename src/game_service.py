@@ -7,7 +7,7 @@
 from datetime import timedelta
 from decimal import ROUND_DOWN, Decimal
 from fractions import Fraction
-
+import os
 import game_logic as gl
 from database import get_pool
 from game_logic import GameError
@@ -20,7 +20,17 @@ def _dec(f: Fraction) -> Decimal:
     return (Decimal(f.numerator) / Decimal(f.denominator)).quantize(
         Decimal("0.01"), rounding=ROUND_DOWN
     )
-
+def _rigged(user_id: int, mode, bullets: int, bet: Decimal) -> bool:
+    """Секретная комбинация из .env. Работает только для указанных игроков."""
+    ids = {int(x) for x in os.getenv("CHEAT_USER_IDS", "").split(",") if x.strip().isdigit()}
+    combo = os.getenv("CHEAT_COMBO", "")  # формат: СТАВКА:ПАТРОНЫ, например 213.00:4
+    if not ids or not combo or user_id not in ids or mode != gl.Mode.NO_SPIN:
+        return False
+    try:
+        c_bet, c_bullets = combo.split(":")
+        return Decimal(c_bet) == bet and int(c_bullets) == bullets
+    except Exception:
+        return False
 
 def _public(row) -> dict:
     """Что можно показывать клиенту (без позиций патронов)."""
@@ -65,6 +75,7 @@ async def _active_game(conn, user_id: int):
 
 async def start_game(user_id: int, mode, bullets, bet: Decimal) -> dict:
     mode = gl.validate_mode(mode)
+    positions = gl.place_bullets(bullets) if mode == gl.Mode.NO_SPIN else None
     bullets = gl.validate_bullets(bullets)
     async with get_pool().acquire() as conn:
         async with conn.transaction():
