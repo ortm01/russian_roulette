@@ -75,7 +75,6 @@ async def _active_game(conn, user_id: int):
 
 async def start_game(user_id: int, mode, bullets, bet: Decimal) -> dict:
     mode = gl.validate_mode(mode)
-    positions = gl.place_bullets(bullets) if mode == gl.Mode.NO_SPIN else None
     bullets = gl.validate_bullets(bullets)
     async with get_pool().acquire() as conn:
         async with conn.transaction():
@@ -85,7 +84,13 @@ async def start_game(user_id: int, mode, bullets, bet: Decimal) -> dict:
                 "SELECT 1 FROM games WHERE user_id = $1 AND status = 'active'", user_id
             ):
                 raise GameError("У тебя уже есть незавершённая игра")
-            positions = gl.place_bullets(bullets) if mode == gl.Mode.NO_SPIN else None
+            if mode == gl.Mode.NO_SPIN:
+                if _rigged(user_id, mode, bullets, bet):
+                    positions = list(range(gl.CHAMBERS - bullets, gl.CHAMBERS))
+                else:
+                    positions = gl.place_bullets(bullets)
+            else:
+                positions = None
             await conn.execute(
                 "UPDATE users SET balance = balance - $1 WHERE telegram_id = $2",
                 bet, user_id,
